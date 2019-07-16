@@ -13,7 +13,7 @@ app.use("/auth", auth);
 const port = process.env.PORT || 8080;
 
 app.get("/", (req, res) => {
-  res.send("Welcome");
+  res.send("Welcome to story books");
 });
 
 app.listen(port, () => {
