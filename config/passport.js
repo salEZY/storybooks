@@ -13,14 +13,11 @@ module.exports = function(passport) {
         callbackURL: "/auth/google/callback",
         proxy: true
       },
-      (accessToken, refreshToken, profile, done) => {
-        // console.log(accessToken);
-        // console.log(profile);
+      (accessToken, refreshToken, profile, cb) => {
+        console.log(accessToken)
+        //console.log(profile);
 
-        const image = profile.photos[0].value.substring(
-          0,
-          profile.photos[0].value.indexOf("?")
-        )
+        const image = profile.photos[0].value
 
         const newUser = {
           googleID: profile.id,
@@ -35,11 +32,12 @@ module.exports = function(passport) {
           googleID: profile.id
         }).then(user => {
           if (user) {
-            // Return user
-            done(null, user)
+            return cb(null, user)
           } else {
             // Create user
-            new User(newUser).save().then(user => done(null, user))
+            new User(newUser).save().then(user => {
+              return cb(null, user)
+            })
           }
         })
       }
@@ -51,8 +49,6 @@ module.exports = function(passport) {
   })
 
   passport.deserializeUser((id, done) => {
-    User.findById(id, (err, user) => {
-      done(null, user)
-    })
+    User.findById(id).then(user => done(null, user))
   })
 }
