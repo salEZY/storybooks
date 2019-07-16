@@ -1,8 +1,9 @@
 const googleClientID = process.env.GOOGLECLIENTID;
 const googleClientSecret = process.env.GOOGLECLIENTSECRET;
+const mongoURI = process.env.URI;
 
 module.exports = {
-  mongoURI: "mongodb://salezy:salezy1@ds149947.mlab.com:49947/storybooks-dev",
+  mongoURI,
   googleClientID,
   googleClientSecret
 };

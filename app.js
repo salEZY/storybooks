@@ -5,6 +5,16 @@ const passport = require("passport");
 
 require("./config/passport")(passport);
 const auth = require("./routes/auth");
+const { mongoURI } = require("./config/keys");
+
+//Map global promises
+mongoose.Promise = global.Promise;
+mongoose
+  .connect(mongoURI, {
+    useNewUrlParser: true
+  })
+  .then(() => console.log("MongoDB connected"))
+  .catch(err => console.log(err));
 
 const app = express();
 
