@@ -1,6 +1,7 @@
 require("dotenv").config()
 const express = require("express")
-const session = require("express-session")
+const cookieSession = require("cookie-session")
+const bodyParser = require('body-parser')
 const cookieParser = require("cookie-parser")
 const mongoose = require("mongoose")
 const passport = require("passport")
@@ -21,16 +22,14 @@ mongoose
 
 const app = express()
 
-app.use(cookieParser())
-app.use(require("body-parser").urlencoded({ extended: true }))
-app.use(
-  session({
-    secret: "tajna",
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true }
-  })
-)
+app.use(cookieParser("tajna"))
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json())
+app.use(cookieSession({
+  name: 'session',
+  keys: ['key1', 'key2'],
+  secret: "tajna"
+}))
 app.use(passport.initialize())
 app.use(passport.session())
 

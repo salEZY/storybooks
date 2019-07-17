@@ -16,6 +16,7 @@ router.get(
 )
 
 router.get("/verify", (req, res) => {
+  console.log(req.user)
   if (req.user) {
     console.log(req.user)
   } else {
@@ -30,6 +31,7 @@ router.get("/error", (req, res) => {
 router.get("/logout", (req, res) => {
   req.logout()
   res.redirect("/")
+  console.log("Logged out!")
 })
 
 module.exports = router
