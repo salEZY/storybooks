@@ -16,7 +16,6 @@ router.get(
 )
 
 router.get("/verify", (req, res) => {
-  console.log(req.user)
   if (req.user) {
     console.log(req.user)
   } else {
