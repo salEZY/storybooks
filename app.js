@@ -1,5 +1,6 @@
 require('dotenv').config()
 const express = require('express')
+const exphbs = require('express-handlebars')
 const cookieSession = require('cookie-session')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
@@ -9,6 +10,7 @@ const passport = require('passport')
 require('./models/user')
 require('./config/passport')(passport)
 const auth = require('./routes/auth')
+const index = require('./routes/index')
 const { mongoURI } = require('./config/keys')
 
 //Map global promises
@@ -21,6 +23,15 @@ mongoose
   .catch(err => console.log(err))
 
 const app = express()
+
+// Handlebars
+app.engine(
+  'handlebars',
+  exphbs({
+    defaultLayout: 'main'
+  })
+)
+app.set('view engine', 'handlebars')
 
 app.use(cookieParser('tajna'))
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -41,10 +52,8 @@ app.use((req, res, next) => {
   next()
 })
 
+app.use('/', index)
 app.use('/auth', auth)
-app.get('/', (req, res) => {
-  res.send('Welcome to StoryBooks!')
-})
 
 const port = process.env.PORT || 8080
 
