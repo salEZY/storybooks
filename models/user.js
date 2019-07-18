@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 // Create Schema
@@ -27,4 +27,4 @@ const UserSchema = new Schema(
 )
 
 // Create collection
-mongoose.model("users", UserSchema)
+mongoose.model('users', UserSchema)
