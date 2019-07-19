@@ -11,6 +11,7 @@ require('./models/user')
 require('./config/passport')(passport)
 const auth = require('./routes/auth')
 const index = require('./routes/index')
+const stories = require('./routes/stories')
 const { mongoURI } = require('./config/keys')
 
 //Map global promises
@@ -54,6 +55,7 @@ app.use((req, res, next) => {
 
 app.use('/', index)
 app.use('/auth', auth)
+app.use('/stories', stories)
 
 const port = process.env.PORT || 8080
 
