@@ -1,6 +1,7 @@
 require('dotenv').config()
 const express = require('express')
 const exphbs = require('express-handlebars')
+const path = require('path')
 const cookieSession = require('cookie-session')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
@@ -52,6 +53,9 @@ app.use((req, res, next) => {
   res.locals.user = req.user || null
   next()
 })
+
+// Set static folder
+app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/', index)
 app.use('/auth', auth)
