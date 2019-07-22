@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const { ensureAuth, ensureGuest } = require('../helpers/auth')
 
 // Index
 router.get('/', (req, res) => {
@@ -7,7 +8,7 @@ router.get('/', (req, res) => {
 })
 
 // Add story
-router.get('/add', (req, res) => {
+router.get('/add', ensureAuth, (req, res) => {
   res.render('stories/add')
 })
 
