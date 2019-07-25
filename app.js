@@ -15,6 +15,7 @@ const auth = require('./routes/auth')
 const index = require('./routes/index')
 const stories = require('./routes/stories')
 const { mongoURI } = require('./config/keys')
+const { truncate, stripTags } = require('./helpers/hbs')
 
 //Map global promises
 mongoose.Promise = global.Promise
@@ -31,6 +32,10 @@ const app = express()
 app.engine(
   'handlebars',
   exphbs({
+    helpers: {
+      truncate: truncate,
+      stripTags: stripTags
+    },
     defaultLayout: 'main'
   })
 )
