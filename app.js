@@ -15,7 +15,7 @@ const auth = require('./routes/auth')
 const index = require('./routes/index')
 const stories = require('./routes/stories')
 const { mongoURI } = require('./config/keys')
-const { truncate, stripTags } = require('./helpers/hbs')
+const { truncate, stripTags, formatDate } = require('./helpers/hbs')
 
 //Map global promises
 mongoose.Promise = global.Promise
@@ -34,7 +34,8 @@ app.engine(
   exphbs({
     helpers: {
       truncate: truncate,
-      stripTags: stripTags
+      stripTags: stripTags,
+      formatDate: formatDate
     },
     defaultLayout: 'main'
   })
