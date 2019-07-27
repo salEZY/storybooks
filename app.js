@@ -4,6 +4,7 @@ const exphbs = require('express-handlebars')
 const path = require('path')
 const cookieSession = require('cookie-session')
 const bodyParser = require('body-parser')
+const methodOverride = require('method-override')
 const cookieParser = require('cookie-parser')
 const mongoose = require('mongoose')
 const passport = require('passport')
@@ -15,7 +16,7 @@ const auth = require('./routes/auth')
 const index = require('./routes/index')
 const stories = require('./routes/stories')
 const { mongoURI } = require('./config/keys')
-const { truncate, stripTags, formatDate } = require('./helpers/hbs')
+const { truncate, stripTags, formatDate, select } = require('./helpers/hbs')
 
 //Map global promises
 mongoose.Promise = global.Promise
@@ -35,7 +36,8 @@ app.engine(
     helpers: {
       truncate: truncate,
       stripTags: stripTags,
-      formatDate: formatDate
+      formatDate: formatDate,
+      select: select
     },
     defaultLayout: 'main'
   })
@@ -45,6 +47,7 @@ app.set('view engine', 'handlebars')
 app.use(cookieParser('tajna'))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
+app.use(methodOverride('_method'))
 app.use(
   cookieSession({
     name: 'session',

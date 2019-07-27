@@ -16,6 +16,9 @@ router.get('/', (req, res) => {
       })
     })
 })
+// Show stories from user
+
+
 // Single story GET
 router.get('/show/:id', (req, res) => {
   Story.findOne({
@@ -33,7 +36,17 @@ router.get('/show/:id', (req, res) => {
 router.get('/add', ensureAuth, (req, res) => {
   res.render('stories/add')
 })
-
+// Edit story
+router.get('/edit/:id', ensureAuth, (req, res) => {
+  Story.findOne({
+    _id: req.params.id
+  })
+    .then(story => {
+      res.render('stories/edit', {
+        story: story
+      })
+    })
+})
 // POST add story
 router.post('/', (req, res) => {
   let allowComments
@@ -55,6 +68,39 @@ router.post('/', (req, res) => {
   new Story(newStory).save().then(story => {
     res.redirect(`/stories/show/${story.id}`)
   })
+})
+
+// Edit story
+router.put('/:id', (req, res) => {
+  Story.findOne({
+    _id: req.params.id
+  })
+    .then(story => {
+      let allowComments
+
+      if (req.body.allowComments) {
+        allowComments = true
+      } else {
+        allowComments = false
+      }
+      story.title = req.body.title
+      story.body = req.body.body
+      story.status = req.body.status
+      story.allowComments = allowComments
+
+      story.save()
+        .then(story => {
+          res.redirect('/dashboard')
+        })
+    })
+})
+
+//Delete
+router.delete('/:id', (req, res) => {
+  Story.remove({_id: req.params.id})
+    .then(() =>{
+      res.redirect('/dashboard')
+    })
 })
 
 module.exports = router
