@@ -18,13 +18,13 @@ router.get('/', (req, res) => {
 })
 // Show stories from user
 
-
 // Single story GET
 router.get('/show/:id', (req, res) => {
   Story.findOne({
     _id: req.params.id
   })
     .populate('user')
+    .populate('comments.commentUser')
     .then(story => {
       res.render('stories/show', {
         story: story
@@ -40,12 +40,11 @@ router.get('/add', ensureAuth, (req, res) => {
 router.get('/edit/:id', ensureAuth, (req, res) => {
   Story.findOne({
     _id: req.params.id
-  })
-    .then(story => {
-      res.render('stories/edit', {
-        story: story
-      })
+  }).then(story => {
+    res.render('stories/edit', {
+      story: story
     })
+  })
 })
 // POST add story
 router.post('/', (req, res) => {
@@ -74,33 +73,47 @@ router.post('/', (req, res) => {
 router.put('/:id', (req, res) => {
   Story.findOne({
     _id: req.params.id
-  })
-    .then(story => {
-      let allowComments
+  }).then(story => {
+    let allowComments
 
-      if (req.body.allowComments) {
-        allowComments = true
-      } else {
-        allowComments = false
-      }
-      story.title = req.body.title
-      story.body = req.body.body
-      story.status = req.body.status
-      story.allowComments = allowComments
+    if (req.body.allowComments) {
+      allowComments = true
+    } else {
+      allowComments = false
+    }
+    story.title = req.body.title
+    story.body = req.body.body
+    story.status = req.body.status
+    story.allowComments = allowComments
 
-      story.save()
-        .then(story => {
-          res.redirect('/dashboard')
-        })
+    story.save().then(story => {
+      res.redirect('/dashboard')
     })
+  })
 })
 
 //Delete
 router.delete('/:id', (req, res) => {
-  Story.deleteOne({_id: req.params.id})
-    .then(() =>{
-      res.redirect('/dashboard')
+  Story.deleteOne({ _id: req.params.id }).then(() => {
+    res.redirect('/dashboard')
+  })
+})
+
+//Add comment
+router.post('/comment/:id', (req, res) => {
+  Story.findOne({
+    _id: req.params.id
+  }).then(story => {
+    const newComment = {
+      commentBody: req.body.commentBody,
+      commentUser: req.user.id
+    }
+
+    story.comments.unshift(newComment)
+    story.save().then(story => {
+      res.redirect(`/stories/show/${story.id}`)
     })
+  })
 })
 
 module.exports = router
