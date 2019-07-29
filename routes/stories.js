@@ -10,6 +10,7 @@ const User = mongoose.model('users')
 router.get('/', (req, res) => {
   Story.find({ status: 'public' })
     .populate('user')
+    .sort({ date: 'desc' })
     .then(stories => {
       res.render('stories/index', {
         stories: stories
@@ -41,9 +42,13 @@ router.get('/edit/:id', ensureAuth, (req, res) => {
   Story.findOne({
     _id: req.params.id
   }).then(story => {
-    res.render('stories/edit', {
-      story: story
-    })
+    if (story.user !== req.user.id) {
+      res.redirect('/stories')
+    } else {
+      res.render('stories/edit', {
+        story: story
+      })
+    }
   })
 })
 // POST add story
