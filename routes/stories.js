@@ -4,7 +4,6 @@ const mongoose = require('mongoose')
 const { ensureAuth, ensureGuest } = require('../helpers/auth')
 
 const Story = mongoose.model('stories')
-const User = mongoose.model('users')
 
 // Index
 router.get('/', (req, res) => {
